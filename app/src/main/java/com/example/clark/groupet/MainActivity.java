@@ -8,10 +8,14 @@ import android.view.KeyEvent;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.WebSettings;
+import com.mopub.mobileads.MoPubErrorCode;
+import com.mopub.mobileads.MoPubView;
 
 
 public class MainActivity extends AppCompatActivity {
     private WebView mWebView;
+    private MoPubView moPubView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +34,13 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+
+        final String adUnitId = "497c211508fb480386cb5e2a500c0f01";
+        moPubView = (MoPubView) findViewById(R.id.adview);
+        moPubView.setAdUnitId(adUnitId);
+        moPubView.setAutorefreshEnabled(true);
+        moPubView.loadAd();
     }
 
     @Override
@@ -39,5 +50,14 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (moPubView != null) {
+            moPubView.destroy();
+            moPubView = null;
+        }
     }
 }
